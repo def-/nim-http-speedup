@@ -1,4 +1,5 @@
 import rawsockets, selectors
+from posix import fork
 
 type Data* = ref object of RootRef
   socket: SocketHandle
@@ -14,6 +15,8 @@ Hello World"""
 var sock = newRawSocket()
 sock.setSockOptInt(cint(SOL_SOCKET), SO_REUSEADDR, 1)
 sock.setBlocking(false)
+
+discard fork()
 
 var sel = newSelector()
 var data = Data(socket: sock, isServer: true, done: false)
@@ -37,11 +40,12 @@ while true:
     let data = Data(info[0].data)
     if EvRead in info.events:
       if data.isServer:
-        echo "Read, server"
+        #echo "Read, server"
         var sock2 = sock.accept(cast[ptr SockAddr](addr(sockAddress)), addr(addrLen))
-        sock2.setBlocking(false)
-        var data2 = Data(socket: sock2, isServer: false)
-        sel.register(sock2, {EvRead, EvWrite}, data2)
+        if int(sock2) > -1:
+          sock2.setBlocking(false)
+          var data2 = Data(socket: sock2, isServer: false)
+          sel.register(sock2, {EvRead, EvWrite}, data2)
       else:
         #echo "Read, not server"
         discard data.socket.recv(addr incoming, incoming.len, 0)
