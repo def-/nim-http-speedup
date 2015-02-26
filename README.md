@@ -6,7 +6,7 @@ Current numbers, with persistent connections:
     asynchttp       13746
     asyncnet        50806
     selectors       84021
-    epoll           86843
+    epoll           86843 (with edge-triggering)
     epoll_parallel 124396 (4 threads)
     epoll_parallel 145422 (8 threads)
 
