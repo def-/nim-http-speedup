@@ -1,7 +1,14 @@
 import rawsockets, epoll, unsigned
 
-var hw = """HTTP/1.1 200 OK
-Connection: close
+proc accept4*(a1: SocketHandle, a2: ptr SockAddr, a3: ptr Socklen,
+  flags: cint): SocketHandle {.importc, header: "<sys/socket.h>".}
+
+var
+  SOCK_NONBLOCK* {.importc, header: "<sys/socket.h>".}: cint
+    ## Non-blocking mode.
+  SOCK_CLOEXEC* {.importc, header: "<sys/socket.h>".}: cint
+
+var hw = """HTTP/1.0 200 OK
 Content-Length: 11
 
 Hello World"""
@@ -12,7 +19,7 @@ sock.setBlocking(false)
 echo sock.cint
 
 var epollFD = epoll_create(64)
-var evs = epoll_event(events: EPOLLIN, data: epoll_data(fd: cint(sock)))
+var evs = epoll_event(events: EPOLLIN or EPOLLET, data: epoll_data(fd: cint(sock)))
 echo epollFD.epoll_ctl(EPOLL_CTL_ADD, sock, addr evs)
 
 var name: SockAddr_in
@@ -38,16 +45,16 @@ while true:
     if (events[i].events and EPOLLIN) != 0:
       if fd == sock:
         #echo "Read, server"
-        var sock2 = sock.accept(cast[ptr SockAddr](addr(sockAddress)), addr(addrLen))
-        sock2.setBlocking(false)
-        var evs2 = epoll_event(events: EPOLLIN or EPOLLOUT, data: epoll_data(fd: cint(sock2)))
-        discard epollFD.epoll_ctl(EPOLL_CTL_ADD, sock2, addr evs2)
+        while true:
+          var sock2 = sock.accept4(cast[ptr SockAddr](addr(sockAddress)), addr(addrLen), SOCK_CLOEXEC or SOCK_NONBLOCK)
+          if cint(sock2) < 0: break
+          var evs2 = epoll_event(events: EPOLLIN or EPOLLOUT, data: epoll_data(fd: cint(sock2)))
+          discard epollFD.epoll_ctl(EPOLL_CTL_ADD, sock2, addr evs2)
       else:
         #echo "Read, no server"
         discard fd.recv(addr incoming, incoming.len, 0)
     if (events[i].events and EPOLLOUT) != 0:
       discard fd.send(addr hw[0], hw.len, int32(MSG_NOSIGNAL))
       fd.close()
-      #sel.unregister(data.socket)
 
 sock.close()

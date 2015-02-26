@@ -17,7 +17,9 @@ Current numbers:
     asynchttp       13746
     asyncnet        16255
     selectors       26442
-    epoll           31499
+    epoll           31499 (without accept4)
+    epoll           32765 (with accept4)
+    epoll           36066 (with edge-triggering on first socket)
     
     parallel (2)    32222
     parallel (4)    33268
