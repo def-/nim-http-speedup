@@ -19,9 +19,12 @@ All numbers on my Core2Quad Q9300, except where noted otherwise:
 
 For comparison:
 
+    python epoll     9303
+    h2o (http 1.1)  39293
+
     go (1 thread)   23941
     go (4 threads)  58552
-    
+
     cppsp (1 thr.)  26728
     cppsp (4 thr.) 107227
 
