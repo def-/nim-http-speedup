@@ -5,6 +5,8 @@ Current numbers:
                     Req/s
     go (1 thread)   23941
     go (4 threads)  58552
+    
+    cppsp (1 thr.)  26728
     cppsp (4 thr.) 107227
     
     sync in nim:
@@ -15,6 +17,7 @@ Current numbers:
     asynchttp       13746
     asyncnet        16255
     selectors       26442
+    epoll           31499
     
     parallel (2)    32222
     parallel (4)    33268

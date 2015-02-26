@@ -14,7 +14,7 @@ proc processClient(client: AsyncSocket) {.async.} =
 proc serve() {.async.} =
   var server = newAsyncSocket()
   server.setSockOpt(OptReuseAddr, true)
-  server.bindAddr(Port(8000))
+  server.bindAddr(Port(8080))
   server.listen()
 
   var future = newFuture[AsyncSocket]("asyncnet.accept")
