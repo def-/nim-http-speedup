@@ -6,7 +6,6 @@ type Data* = ref object of RootRef
   done: bool
 
 var hw = """HTTP/1.1 200 OK
-Connection: close
 Content-Length: 11
 
 Hello World"""
@@ -37,7 +36,7 @@ while true:
     let data = Data(info[0].data)
     if EvRead in info.events:
       if data.isServer:
-        echo "Read, server"
+        #echo "Read, server"
         var sock2 = sock.accept(cast[ptr SockAddr](addr(sockAddress)), addr(addrLen))
         sock2.setBlocking(false)
         var data2 = Data(socket: sock2, isServer: false)
@@ -46,13 +45,13 @@ while true:
         #echo "Read, not server"
         discard data.socket.recv(addr incoming, incoming.len, 0)
     if EvWrite in info.events:
-      if not data.done:
+      discard data.socket.send(addr hw[0], hw.len, int32(MSG_NOSIGNAL))
+      #sel.unregister(data.socket)
+      #if not data.done:
         #echo "Write, not done"
-        discard data.socket.send(addr hw[0], hw.len, int32(MSG_NOSIGNAL))
-        data.done = true
-      else:
+        #data.done = true
+      #else:
         #echo "Write, done"
-        data.socket.close()
-        sel.unregister(data.socket)
+        #data.socket.close()
 
 sock.close()

@@ -8,7 +8,7 @@ var
     ## Non-blocking mode.
   SOCK_CLOEXEC* {.importc, header: "<sys/socket.h>".}: cint
 
-var hw = """HTTP/1.0 200 OK
+var hw = """HTTP/1.1 200 OK
 Content-Length: 11
 
 Hello World"""
@@ -55,6 +55,6 @@ while true:
         discard fd.recv(addr incoming, incoming.len, 0)
     if (events[i].events and EPOLLOUT) != 0:
       discard fd.send(addr hw[0], hw.len, int32(MSG_NOSIGNAL))
-      fd.close()
+      #fd.close()
 
 sock.close()
