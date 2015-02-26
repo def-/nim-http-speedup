@@ -22,6 +22,7 @@ Current numbers:
     epoll           36066 (with edge-triggering on first socket)
     epoll           37061 (with edge-triggering on all sockets)
     
-    epoll_parallel 124396
+    epoll_parallel 124396 (4 threads)
+    epoll_parallel 145422 (8 threads)
 
 TODO: epoll with edge triggering

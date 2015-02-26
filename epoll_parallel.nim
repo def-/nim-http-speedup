@@ -45,7 +45,7 @@ Hello World"""
         discard fd.send(addr hw[0], hw.len, int32(MSG_NOSIGNAL))
         #fd.close()
 
-const n = 4
+const n = 8
 
 var threads: array[n, TThread[tuple[t: int, s: SocketHandle, epollFD: cint]]]
 
