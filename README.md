@@ -9,7 +9,7 @@ All numbers on my Core2Quad Q9300, except where noted otherwise:
     wrk -c 400 -d 10 -t 12 http://localhost:8080
 
           requests/second
-    jester           5661
+    jester           6597
     asynchttp       13746
     asyncnet        50806
     selectors       84021

@@ -1,11 +1,9 @@
-import jester, strtabs, json, asyncdispatch, os, strutils
+import jester, strtabs, asyncdispatch, os, strutils
 
-let port = Port(paramStr(1).parseInt)
-let settings = newSettings(port=port, staticDir=".")
+let settings = newSettings(port=Port(8080), staticDir=".")
 
 routes:
-  get "/json":
-    var obj = %{"message": %"Hello, World!"}
-    resp($obj, "application/json")
+  get "/":
+    resp("Hello World")
 
 runForever()
