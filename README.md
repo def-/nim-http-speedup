@@ -20,9 +20,8 @@ Current numbers:
     epoll           31499 (without accept4)
     epoll           32765 (with accept4)
     epoll           36066 (with edge-triggering on first socket)
+    epoll           37061 (with edge-triggering on all sockets)
     
-    parallel (2)    32222
-    parallel (4)    33268
-    parallel (8)    33667
+    epoll_parallel 124396
 
 TODO: epoll with edge triggering

@@ -48,7 +48,7 @@ while true:
         while true:
           var sock2 = sock.accept4(cast[ptr SockAddr](addr(sockAddress)), addr(addrLen), SOCK_CLOEXEC or SOCK_NONBLOCK)
           if cint(sock2) < 0: break
-          var evs2 = epoll_event(events: EPOLLIN or EPOLLOUT, data: epoll_data(fd: cint(sock2)))
+          var evs2 = epoll_event(events: EPOLLIN or EPOLLOUT or EPOLLET, data: epoll_data(fd: cint(sock2)))
           discard epollFD.epoll_ctl(EPOLL_CTL_ADD, sock2, addr evs2)
       else:
         #echo "Read, no server"
