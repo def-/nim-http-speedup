@@ -3,6 +3,7 @@ wrk -c 400 -d 10 -t 12 http://localhost:8080
 Current numbers:
 
                     Req/s
+    go (1 thread)   23941
     go (4 threads)  58552
     cppsp (4 thr.) 107227
     
