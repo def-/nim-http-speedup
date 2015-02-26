@@ -1,7 +1,14 @@
-wrk -c 400 -d 10 -t 12 http://localhost:8080
+# Nim HTTP Speedup
 
-Current numbers, with persistent connections:
+I'm experimenting with speeding up HTTP servers in Nim. These servers all just return "Hello World". Number of requests per second is measured.
 
+## Current numbers, with persistent connections:
+
+All numbers on my Core2Quad Q9300, except where noted otherwise:
+
+    wrk -c 400 -d 10 -t 12 http://localhost:8080
+
+          requests/second
     jester           5661
     asynchttp       13746
     asyncnet        50806
@@ -18,7 +25,17 @@ For comparison:
     cppsp (1 thr.)  26728
     cppsp (4 thr.) 107227
 
-Old numbers, before realizing to use persistent connections:
+On a high performance machine (2x 8-core Xeon E5-2680 (16 cores, 32 threads total)):
+
+    wrk -c 800 -d 10 -t 24 http://127.0.0.1:8080/
+
+    epoll            177345
+    epoll (2 thr.)   339530
+    epoll (4 thr.)   627846
+    epoll (8 thr.)  1048415
+    epoll (16 thr.) 1532484
+
+## Old numbers, before realizing to use persistent connections:
 
     sync in nim:
     rawsockets      14259
@@ -32,5 +49,3 @@ Old numbers, before realizing to use persistent connections:
     epoll           32765 (with accept4)
     epoll           36066 (with edge-triggering on first socket)
     epoll           37061 (with edge-triggering on all sockets)
-
-TODO: epoll with edge triggering
