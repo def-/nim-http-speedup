@@ -18,7 +18,8 @@ https://github.com/def-/nim/tree/parallel-httpserver
 
 The very crude parallelization seems to kind of work (but segfaults with
 boehm). But the threads are probably getting into  each others way, should make
-them use a single epoll instance.
+them use a single epoll instance. Or one thread accepts incoming connections
+and spreads them to worker threads.
 
     2 threads                          65866
     3 threads                          75175
