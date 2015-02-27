@@ -1,7 +1,7 @@
 import asynchttpserver, asyncdispatch, os, strutils
 
 proc cb(req: Request) {.async.} =
-  await req.respond(Http200, "Hello, World!")
+  req.respond(Http200, "Hello, World!")
 
 proc run(server: AsyncHttpServer) =
   register(TAsyncFD(server.socket.fd))

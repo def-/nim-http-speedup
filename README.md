@@ -6,7 +6,7 @@ I'm experimenting with speeding up HTTP servers in Nim. These servers all just r
 
 Trying to optimize asynchttpserver_hello:
 
-https://github.com/def-/nim/tree/optimize-httpserver
+https://github.com/def-/nim/tree/parallel-httpserver
 
                                        rqs/s
     initial state                      13746
@@ -16,11 +16,17 @@ https://github.com/def-/nim/tree/optimize-httpserver
     with --gc:markandsweep             35986
     with --gc:boehm (single threaded)  40361
 
-Parallelizing doesn't work yet, the selectors have to be reworked for this probably:
+The very crude parallelization seems to kind of work (but segfaults with
+boehm). But the threads are probably getting into  each others way, should make
+them use a single epoll instance.
 
-https://github.com/def-/nim/tree/parallel-httpserver
+    2 threads                          65866
+    3 threads                          75175
+    4 threads                          72615
 
-    first running parallel version     11368
+    2 threads --gc:markandsweep        76713
+    3 threads --gc:markandsweep        87040
+    4 threads --gc:markandsweep        78510
 
 ## Current numbers, with persistent connections:
 
