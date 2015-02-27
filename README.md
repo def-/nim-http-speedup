@@ -2,6 +2,12 @@
 
 I'm experimenting with speeding up HTTP servers in Nim. These servers all just return "Hello World". Number of requests per second is measured.
 
+## Optimizing standard library
+
+With these changes so far: https://github.com/def-/Nim/commit/2bf8e421a50da992ec8f50789cf2b78f2dfbbfbb
+
+    asynchttp       18326 (from 13746)
+
 ## Current numbers, with persistent connections:
 
 All numbers on my Core2Quad Q9300, except where noted otherwise:
