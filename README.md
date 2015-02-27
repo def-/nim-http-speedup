@@ -13,7 +13,8 @@ https://github.com/def-/nim/tree/optimize-httpserver
     first optimizations (2bf8e42)      18326
     some more optimizations (27ba61a)  25524
     (671afcd)                          31498
-    with boehm gc (single threaded)    40361
+    with --gc:markandsweep             38311
+    with --gc:boehm (single threaded)  40361
 
 Parallelizing doesn't work yet, the selectors have to be reworked for this probably:
 
