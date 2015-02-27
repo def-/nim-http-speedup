@@ -4,9 +4,13 @@ I'm experimenting with speeding up HTTP servers in Nim. These servers all just r
 
 ## Optimizing standard library
 
-With these changes so far: https://github.com/def-/Nim/commit/2bf8e421a50da992ec8f50789cf2b78f2dfbbfbb
+Trying to optimize asynchttpserver_hello:
 
-    asynchttp       18326 (from 13746)
+                                       rqs/s
+    initial state                      13746
+    first optimizations (2bf8e42)      18326
+    some more optimizations (27ba61a)  25524
+    with boehm gc (single threaded)    31855
 
 ## Current numbers, with persistent connections:
 
@@ -14,7 +18,7 @@ All numbers on my Core2Quad Q9300, except where noted otherwise:
 
     wrk -c 400 -d 10 -t 12 http://localhost:8080
 
-          requests/second
+                    rqs/s
     jester           6597
     asynchttp       13746
     asyncnet        50806
