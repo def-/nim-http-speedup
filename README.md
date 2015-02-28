@@ -8,26 +8,27 @@ Trying to optimize asynchttpserver_hello:
 
 https://github.com/def-/nim/tree/parallel-httpserver
 
-                                       rqs/s
-    initial state                      13746
-    first optimizations (2bf8e42)      18326
-    some more optimizations (27ba61a)  25524
-    (671afcd)                          31498
-    with --gc:markandsweep             35986
-    with --gc:boehm (single threaded)  40361
+                                rqs/s  local  network
+    initial state                      13746    13807
+    first optimizations (2bf8e42)      18326        -
+    some more optimizations (27ba61a)  25524        -
+    (671afcd)                          31498    38270
+    with --gc:markandsweep             35986    50358
+    with --gc:boehm (single threaded)  40361    51973
 
 The very crude parallelization seems to kind of work (but segfaults with
 boehm). But the threads are probably getting into  each others way, should make
 them use a single epoll instance. Or one thread accepts incoming connections
 and spreads them to worker threads.
 
-    2 threads                          65866
-    3 threads                          75175
-    4 threads                          72615
+                                       local  network
+    2 threads                          65866    74984
+    3 threads                          75175    93101
+    4 threads                          72615   115807
 
-    2 threads --gc:markandsweep        76713
-    3 threads --gc:markandsweep        87040
-    4 threads --gc:markandsweep        78510
+    2 threads --gc:markandsweep        76713    76860
+    3 threads --gc:markandsweep        87040   118586
+    4 threads --gc:markandsweep        78510   124643
 
 ## Current numbers, with persistent connections:
 
@@ -35,25 +36,26 @@ All numbers on my Core2Quad Q9300, except where noted otherwise:
 
     wrk -c 400 -d 10 -t 12 http://localhost:8080
 
-                    rqs/s
-    jester           6597
-    asynchttp       13746
-    asyncnet        50806
-    selectors       84021
-    epoll           86843 (with edge-triggering)
-    epoll_parallel 124396 (4 threads)
-    epoll_parallel 145422 (8 threads)
+                                rqs/s  local  network
+    jester                              6597     7014
+    asynchttp                          13746    13807
+    asyncnet                           50806        - (broken anyway)
+    selectors                          84021        - (broken anyway)
+    epoll (with ET)                    86843   121685
+    epoll_parallel (4 thr.)           124396   158333
+    epoll_parallel (8 thr.)           145422   154844
 
 For comparison:
 
-    python epoll     9303
-    h2o (http 1.1)  39293
+                                       local  network
+    python epoll                        9303     5774 (lots of timeouts, weird)
+    h2o (http 1.1)                     39293    46995
 
-    go (1 thread)   23941
-    go (4 threads)  58552
+    go (1 thread)                      23941    29325
+    go (4 threads)                     58552    82170
 
-    cppsp (1 thr.)  26728
-    cppsp (4 thr.) 107227
+    cppsp (1 thr.)                     54603    60506
+    cppsp (4 thr.)                    110318   141808
 
 On a high performance machine (2x 8-core Xeon E5-2680 (16 cores, 32 threads total)):
 

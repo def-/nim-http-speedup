@@ -9,7 +9,7 @@ proc processClient(client: AsyncSocket) {.async.} =
   var buf = newString(8192)
   while true:
     #let line = await recvLineInto(cast[ptr cstring](addr buf[0]), 8192, client)
-    let read = await readInto(buf.cstring, 8192, client, {})
+    #let read = await readInto(buf.cstring, 8192, client, {})
     await client.send(text)
   #client.close()
 
