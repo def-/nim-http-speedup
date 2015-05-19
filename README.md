@@ -1,5 +1,7 @@
 # Nim HTTP Speedup
 
+The single threaded speedups have been merged into Nim as of 0.11.2.
+
 I'm experimenting with speeding up HTTP servers in Nim. These servers all just return "Hello World". Number of requests per second is measured.
 
 ## Optimizing standard library
