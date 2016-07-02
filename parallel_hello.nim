@@ -51,15 +51,15 @@ Hello World"""
 
 const n = 4
 
-var threads: array[n, TThread[tuple[t: int, s: SocketHandle]]]
+var threads: array[n, Thread[tuple[t: int, s: SocketHandle]]]
 
-var sock = newRawSocket()
+var sock = newNativeSocket()
 sock.setSockOptInt(cint(SOL_SOCKET), SO_REUSEADDR, 1)
 sock.setBlocking(false)
 
 var name: SockAddr_in
 name.sin_family = toInt(AF_INET)
-name.sin_port = htons(8080)
+name.sin_port = htons(8080'u16)
 name.sin_addr.s_addr = htonl(INADDR_ANY)
 
 discard sock.bindAddr(cast[ptr SockAddr](addr name), Socklen(sizeof(name)))

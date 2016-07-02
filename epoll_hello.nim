@@ -1,4 +1,4 @@
-import rawsockets, epoll, unsigned
+import rawsockets, epoll
 
 proc accept4*(a1: SocketHandle, a2: ptr SockAddr, a3: ptr Socklen,
   flags: cint): SocketHandle {.importc, header: "<sys/socket.h>".}
@@ -13,7 +13,7 @@ Content-Length: 11
 
 Hello World"""
 
-var sock = newRawSocket()
+var sock = newNativeSocket()
 sock.setSockOptInt(cint(SOL_SOCKET), SO_REUSEADDR, 1)
 sock.setBlocking(false)
 echo sock.cint
@@ -24,7 +24,7 @@ echo epollFD.epoll_ctl(EPOLL_CTL_ADD, sock, addr evs)
 
 var name: SockAddr_in
 name.sin_family = toInt(AF_INET)
-name.sin_port = htons(8080)
+name.sin_port = htons(8080'u16)
 name.sin_addr.s_addr = htonl(INADDR_ANY)
 
 discard sock.bindAddr(cast[ptr SockAddr](addr name), Socklen(sizeof(name)))
