@@ -1,10 +1,10 @@
 import asynchttpserver, asyncdispatch, os, strutils
 
 proc cb(req: Request) {.async.} =
-  req.respond(Http200, "Hello, World!")
+  discard req.respond(Http200, "Hello, World!")
 
 proc run(server: AsyncHttpServer) =
-  register(TAsyncFD(server.socket.fd))
+  register(AsyncFD(server.socket.fd))
   asyncCheck server.serveParallel(cb)
   runForever()
 

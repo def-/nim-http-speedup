@@ -1,4 +1,4 @@
-import rawsockets, epoll, unsigned
+import rawsockets, epoll
 from posix import dup
 
 proc accept4*(a1: SocketHandle, a2: ptr SockAddr, a3: ptr Socklen,
@@ -47,16 +47,16 @@ Hello World"""
 
 const n = 8
 
-var threads: array[n, TThread[tuple[t: int, s: SocketHandle, epollFD: cint]]]
+var threads: array[n, Thread[tuple[t: int, s: SocketHandle, epollFD: cint]]]
 
-var sock = newRawSocket()
+var sock = newNativeSocket()
 sock.setSockOptInt(cint(SOL_SOCKET), SO_REUSEADDR, 1)
 sock.setBlocking(false)
 echo sock.cint
 
 var name: SockAddr_in
 name.sin_family = toInt(AF_INET)
-name.sin_port = htons(8080)
+name.sin_port = htons(8080'u16)
 name.sin_addr.s_addr = htonl(INADDR_ANY)
 
 discard sock.bindAddr(cast[ptr SockAddr](addr name), Socklen(sizeof(name)))
